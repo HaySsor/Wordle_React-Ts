@@ -4,6 +4,9 @@ export type typeGuesses = {
   key: string;
   color: string;
 };
+export type usedKeysType = {
+  [key: string]: string;
+};
 
 export const useWordle = (solution: string) => {
   const [turn, setTurn] = useState(0);
@@ -13,6 +16,7 @@ export const useWordle = (solution: string) => {
   ]);
   const [history, setHistory] = useState<string[]>([]);
   const [isCorrect, setIsCorrect] = useState(false);
+  const [usedKeys, setUsedKeys] = useState<usedKeysType>({});
 
   const formatGuess = () => {
     let solutionArray: (string | null)[] = [...solution];
@@ -55,6 +59,29 @@ export const useWordle = (solution: string) => {
     setTurn((old) => {
       return old + 1;
     });
+    setUsedKeys((old) => {
+      let newKeys = {...old};
+      formattedGuess.forEach((l) => {
+        const currentColor = newKeys[l.key];
+        if (l.color === 'green') {
+          newKeys[l.key] = 'green';
+          return;
+        }
+        if (l.color === 'yellow' && currentColor !== 'green') {
+          newKeys[l.key] = 'yellow';
+          return;
+        }
+        if (
+          l.color === 'grey' &&
+          currentColor !== 'yellow' &&
+          currentColor !== 'green'
+        ) {
+          newKeys[l.key] = 'grey';
+          return;
+        }
+      });
+      return newKeys;
+    });
     setCurrentGuess('');
   };
 
@@ -72,7 +99,6 @@ export const useWordle = (solution: string) => {
       }
 
       const formatted = formatGuess();
-      console.log(formatted);
       addNewGuess(formatted);
     }
     if (/^[A-Za-z]$/.test(key)) {
@@ -89,5 +115,5 @@ export const useWordle = (solution: string) => {
     }
   };
 
-  return {turn, currentGuess, guesses, isCorrect, handleKeyup};
+  return {turn, currentGuess, guesses, isCorrect, handleKeyup, usedKeys};
 };

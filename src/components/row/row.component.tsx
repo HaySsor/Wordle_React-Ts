@@ -8,7 +8,6 @@ type Props = {
 export const Row = ({guess, currentGuess}: Props) => {
   if (currentGuess) {
     let letters = currentGuess.split('');
-    console.log(letters);
     return (
       <div className={`${styled.row} ${styled.current}`}>
         {letters.map((letter, index) => {

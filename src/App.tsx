@@ -1,8 +1,7 @@
 import {useEffect, useState} from 'react';
 import {Wordle} from './components/wordle/wordle.component';
+import data from '../data/db.json';
 import './App.css';
-
-const DATA_LINK = 'http://localhost:3001/solutions';
 
 export type db = {
   id: number;
@@ -13,18 +12,16 @@ function App() {
   const [solution, setSolution] = useState<null | string>(null);
 
   useEffect(() => {
-    const GetSolution = async () => {
-      const res = await fetch(DATA_LINK);
-      const data: db[] = await res.json();
-      const randomSolution = data[Math.floor(Math.random() * data.length - 1)];
+    const GetSolution = () => {
+      const {solutions} = data;
+      const randomSolution =
+        solutions[Math.floor(Math.random() * solutions.length - 1)];
 
       setSolution(randomSolution.word);
     };
 
     GetSolution();
   }, []);
-
-  console.log(solution);
 
   return (
     <div>

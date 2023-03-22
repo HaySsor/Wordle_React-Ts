@@ -18,4 +18,4 @@ export const Grid = ({currentGuess, guesses, turn}: Props) => {
       })}
     </div>
   );
-};
+}; 
